@@ -167,18 +167,7 @@ void EnumOneofFieldGenerator::
 GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
     "inline $type$ $classname$::$name$() const {\n"
-    "  if (has_$name$()) {\n"
-    "    return static_cast< $type$ >($oneof_prefix$$name$_);\n"
-    "  }\n"
-    "  return static_cast< $type$ >($default$);\n"
-    "}\n"
-    "inline void $classname$::set_$name$($type$ value) {\n"
-    "  assert($type$_IsValid(value));\n"
-    "  if (!has_$name$()) {\n"
-    "    clear_$oneof_name$();\n"
-    "    set_has_$name$();\n"
-    "  }\n"
-    "  $oneof_prefix$$name$_ = value;\n"
+    "  return static_cast< $type$ >($oneof_prefix$$name$_);\n"
     "}\n");
 }
 

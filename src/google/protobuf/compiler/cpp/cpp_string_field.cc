@@ -267,75 +267,7 @@ void StringOneofFieldGenerator::
 GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
     "inline const ::std::string& $classname$::$name$() const {\n"
-    "  if (has_$name$()) {\n"
-    "    return *$oneof_prefix$$name$_;\n"
-    "  }\n");
-  if (descriptor_->default_value_string().empty()) {
-    printer->Print(variables_,
-      "  return ::google::protobuf::internal::GetEmptyStringAlreadyInited();\n");
-  } else {
-    printer->Print(variables_,
-      "  return *$default_variable$;\n");
-  }
-  printer->Print(variables_,
-    "}\n"
-    "inline void $classname$::set_$name$(const ::std::string& value) {\n"
-    "  if (!has_$name$()) {\n"
-    "    clear_$oneof_name$();\n"
-    "    set_has_$name$();\n"
-    "    $oneof_prefix$$name$_ = new ::std::string;\n"
-    "  }\n"
-    "  $oneof_prefix$$name$_->assign(value);\n"
-    "}\n"
-    "inline void $classname$::set_$name$(const char* value) {\n"
-    "  if (!has_$name$()) {\n"
-    "    clear_$oneof_name$();\n"
-    "    set_has_$name$();\n"
-    "    $oneof_prefix$$name$_ = new ::std::string;\n"
-    "  }\n"
-    "  $oneof_prefix$$name$_->assign(value);\n"
-    "}\n"
-    "inline "
-    "void $classname$::set_$name$(const $pointer_type$* value, size_t size) {\n"
-    "  if (!has_$name$()) {\n"
-    "    clear_$oneof_name$();\n"
-    "    set_has_$name$();\n"
-    "    $oneof_prefix$$name$_ = new ::std::string;\n"
-    "  }\n"
-    "  $oneof_prefix$$name$_->assign(\n"
-    "      reinterpret_cast<const char*>(value), size);\n"
-    "}\n"
-    "inline ::std::string* $classname$::mutable_$name$() {\n"
-    "  if (!has_$name$()) {\n"
-    "    clear_$oneof_name$();\n"
-    "    set_has_$name$();\n");
-  if (descriptor_->default_value_string().empty()) {
-    printer->Print(variables_,
-      "    $oneof_prefix$$name$_ = new ::std::string;\n");
-  } else {
-    printer->Print(variables_,
-      "    $oneof_prefix$$name$_ = new ::std::string(*$default_variable$);\n");
-  }
-  printer->Print(variables_,
-    "  }\n"
     "  return $oneof_prefix$$name$_;\n"
-    "}\n"
-    "inline ::std::string* $classname$::$release_name$() {\n"
-    "  if (has_$name$()) {\n"
-    "    clear_has_$oneof_name$();\n"
-    "    ::std::string* temp = $oneof_prefix$$name$_;\n"
-    "    $oneof_prefix$$name$_ = NULL;\n"
-    "    return temp;\n"
-    "  } else {\n"
-    "    return NULL;\n"
-    "  }\n"
-    "}\n"
-    "inline void $classname$::set_allocated_$name$(::std::string* $name$) {\n"
-    "  clear_$oneof_name$();\n"
-    "  if ($name$) {\n"
-    "    set_has_$name$();\n"
-    "    $oneof_prefix$$name$_ = $name$;\n"
-    "  }\n"
     "}\n");
 }
 

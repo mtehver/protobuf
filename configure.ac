@@ -147,3 +147,6 @@ case "$target_os" in
     AC_SEARCH_LIBS([sched_yield], [rt], [], [AC_MSG_FAILURE([sched_yield was not found on your system])])
     ;;
 esac
+
+AC_CONFIG_FILES([Makefile src/Makefile protobuf.pc protobuf-lite.pc])
+AC_OUTPUT

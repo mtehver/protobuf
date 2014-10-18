@@ -166,9 +166,8 @@ MessageOneofFieldGenerator::~MessageOneofFieldGenerator() {}
 void MessageOneofFieldGenerator::
 GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline const $type$& $classname$::$name$() const {\n"
-    "  return has_$name$() ? *$oneof_prefix$$name$_\n"
-    "                      : $type$::default_instance();\n"
+	"inline const $type$& $classname$::$name$() const {\n"
+	"  return $oneof_prefix$$name$_;\n"
     "}\n");
 }
 

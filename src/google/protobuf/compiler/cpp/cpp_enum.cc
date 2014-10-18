@@ -112,23 +112,6 @@ void EnumGenerator::GenerateDefinition(io::Printer* printer) {
   } else {
     vars["dllexport"] = options_.dllexport_decl + " ";
   }
-
-  if (HasDescriptorMethods(descriptor_->file())) {
-    printer->Print(vars,
-      "$dllexport$const ::google::protobuf::EnumDescriptor* $classname$_descriptor();\n");
-    // The _Name and _Parse methods
-    printer->Print(vars,
-      "inline const ::std::string& $classname$_Name($classname$ value) {\n"
-      "  return ::google::protobuf::internal::NameOfEnum(\n"
-      "    $classname$_descriptor(), value);\n"
-      "}\n");
-    printer->Print(vars,
-      "inline bool $classname$_Parse(\n"
-      "    const ::std::string& name, $classname$* value) {\n"
-      "  return ::google::protobuf::internal::ParseNamedEnum<$classname$>(\n"
-      "    $classname$_descriptor(), name, value);\n"
-      "}\n");
-  }
 }
 
 void EnumGenerator::
@@ -154,23 +137,6 @@ void EnumGenerator::GenerateSymbolImports(io::Printer* printer) {
     vars["tag"] = descriptor_->value(j)->name();
     printer->Print(vars,
       "static const $nested_name$ $tag$ = $classname$_$tag$;\n");
-  }
-
-  if (HasDescriptorMethods(descriptor_->file())) {
-    printer->Print(vars,
-      "static inline const ::google::protobuf::EnumDescriptor*\n"
-      "$nested_name$_descriptor() {\n"
-      "  return $classname$_descriptor();\n"
-      "}\n");
-    printer->Print(vars,
-      "static inline const ::std::string& $nested_name$_Name($nested_name$ value) {\n"
-      "  return $classname$_Name(value);\n"
-      "}\n");
-    printer->Print(vars,
-      "static inline bool $nested_name$_Parse(const ::std::string& name,\n"
-      "    $nested_name$* value) {\n"
-      "  return $classname$_Parse(name, value);\n"
-      "}\n");
   }
 }
 

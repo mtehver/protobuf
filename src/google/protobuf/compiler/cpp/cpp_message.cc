@@ -418,6 +418,10 @@ GenerateFieldAccessorDefinitions(io::Printer* printer) {
 		  vars["read_method"] = std::string("read_") + FieldDescriptor::TypeName(field->type());
 	  }
 
+	  if (field->containing_oneof()) {
+		  vars["name"] = field->containing_oneof()->name() + "_." + vars["name"];
+	  }
+
 	  if (i > 0) {
 		  printer->Print("else ");
 	  }
@@ -566,7 +570,7 @@ GenerateClassDefinition(io::Printer* printer) {
 
   printer->Print(vars,
     "class $dllexport$$classname$ {\n"
-    " public:\n");
+    "public:\n");
   printer->Indent();
 
   printer->Print(vars,
@@ -674,8 +678,15 @@ GenerateClassDefinition(io::Printer* printer) {
 
   // Generate private members.
   printer->Outdent();
-  printer->Print(" private:\n");
+  printer->Print("private:\n");
   printer->Indent();
+
+  // Generate oneof function declarations
+  for (int i = 0; i < descriptor_->oneof_decl_count(); i++) {
+	  printer->Print(
+		  "inline bool has_$oneof_name$();\n\n",
+		  "oneof_name", descriptor_->oneof_decl(i)->name());
+  }
 
   // TODO(jieluo) - Optimize _has_bits_ for repeated and oneof fields.
   size_t sizeof_has_bits = (descriptor_->field_count() + 31) / 32 * 4;
@@ -727,7 +738,7 @@ GenerateClassDefinition(io::Printer* printer) {
   // For each oneof generate a union
   for (int i = 0; i < descriptor_->oneof_decl_count(); i++) {
     printer->Print(
-        "union $camel_oneof_name$Union {\n",
+        "struct $camel_oneof_name$Union {\n",
         "camel_oneof_name",
         UnderscoresToCamelCase(descriptor_->oneof_decl(i)->name(), true));
     printer->Indent();
@@ -750,7 +761,7 @@ GenerateClassDefinition(io::Printer* printer) {
   // Generate _oneof_case_.
   if (descriptor_->oneof_decl_count() > 0) {
     printer->Print(vars,
-      "std::uint32 _oneof_case_[$oneof_decl_count$];\n"
+      "std::uint32_t _oneof_case_[$oneof_decl_count$];\n"
       "\n");
   }
 
