@@ -70,14 +70,13 @@ EnumFieldGenerator::~EnumFieldGenerator() {}
 
 void EnumFieldGenerator::
 GeneratePrivateMembers(io::Printer* printer) const {
-  printer->Print(variables_, "int $name$_;\n");
+  printer->Print(variables_, "int $name$_ = $default$;\n");
 }
 
 void EnumFieldGenerator::
 GenerateAccessorDeclarations(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline $type$ $name$() const$deprecation$;\n"
-    "inline void set_$name$($type$ value)$deprecation$;\n");
+    "inline $type$ $name$() const$deprecation$;\n");
 }
 
 void EnumFieldGenerator::
@@ -86,12 +85,6 @@ GenerateInlineAccessorDefinitions(io::Printer* printer) const {
     "inline $type$ $classname$::$name$() const {\n"
     "  // @@protoc_insertion_point(field_get:$full_name$)\n"
     "  return static_cast< $type$ >($name$_);\n"
-    "}\n"
-    "inline void $classname$::set_$name$($type$ value) {\n"
-    "  assert($type$_IsValid(value));\n"
-    "  set_has_$name$();\n"
-    "  $name$_ = value;\n"
-    "  // @@protoc_insertion_point(field_set:$full_name$)\n"
     "}\n");
 }
 

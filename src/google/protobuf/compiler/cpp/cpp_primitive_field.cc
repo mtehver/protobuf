@@ -111,14 +111,13 @@ PrimitiveFieldGenerator::~PrimitiveFieldGenerator() {}
 
 void PrimitiveFieldGenerator::
 GeneratePrivateMembers(io::Printer* printer) const {
-  printer->Print(variables_, "$type$ $name$_;\n");
+  printer->Print(variables_, "$type$ $name$_ = $default$;\n");
 }
 
 void PrimitiveFieldGenerator::
 GenerateAccessorDeclarations(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline $type$ $name$() const$deprecation$;\n"
-    "inline void set_$name$($type$ value)$deprecation$;\n");
+    "inline $type$ $name$() const$deprecation$;\n");
 }
 
 void PrimitiveFieldGenerator::
@@ -127,11 +126,6 @@ GenerateInlineAccessorDefinitions(io::Printer* printer) const {
     "inline $type$ $classname$::$name$() const {\n"
     "  // @@protoc_insertion_point(field_get:$full_name$)\n"
     "  return $name$_;\n"
-    "}\n"
-    "inline void $classname$::set_$name$($type$ value) {\n"
-    "  set_has_$name$();\n"
-    "  $name$_ = value;\n"
-    "  // @@protoc_insertion_point(field_set:$full_name$)\n"
     "}\n");
 }
 
@@ -211,13 +205,6 @@ GenerateInlineAccessorDefinitions(io::Printer* printer) const {
     "    return $oneof_prefix$$name$_;\n"
     "  }\n"
     "  return $default$;\n"
-    "}\n"
-    "inline void $classname$::set_$name$($type$ value) {\n"
-    "  if (!has_$name$()) {\n"
-    "    clear_$oneof_name$();\n"
-    "    set_has_$name$();\n"
-    "  }\n"
-    "  $oneof_prefix$$name$_ = value;\n"
     "}\n");
 }
 
@@ -270,51 +257,28 @@ RepeatedPrimitiveFieldGenerator::~RepeatedPrimitiveFieldGenerator() {}
 void RepeatedPrimitiveFieldGenerator::
 GeneratePrivateMembers(io::Printer* printer) const {
   printer->Print(variables_,
-    "::google::protobuf::RepeatedField< $type$ > $name$_;\n");
-  if (descriptor_->options().packed() && HasGeneratedMethods(descriptor_->file())) {
-    printer->Print(variables_,
-      "mutable int _$name$_cached_byte_size_;\n");
-  }
+    "std::vector< $type$ > $name$_;\n");
 }
 
 void RepeatedPrimitiveFieldGenerator::
 GenerateAccessorDeclarations(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline $type$ $name$(int index) const$deprecation$;\n"
-    "inline void set_$name$(int index, $type$ value)$deprecation$;\n"
-    "inline void add_$name$($type$ value)$deprecation$;\n");
+    "inline $type$ $name$(int index) const$deprecation$;\n");
   printer->Print(variables_,
-    "inline const ::google::protobuf::RepeatedField< $type$ >&\n"
-    "    $name$() const$deprecation$;\n"
-    "inline ::google::protobuf::RepeatedField< $type$ >*\n"
-    "    mutable_$name$()$deprecation$;\n");
+	"inline const std::vector< $type$ >& $name$() const$deprecation$;\n");
 }
 
 void RepeatedPrimitiveFieldGenerator::
 GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline $type$ $classname$::$name$(int index) const {\n"
-    "  // @@protoc_insertion_point(field_get:$full_name$)\n"
-    "  return $name$_.Get(index);\n"
-    "}\n"
-    "inline void $classname$::set_$name$(int index, $type$ value) {\n"
-    "  $name$_.Set(index, value);\n"
-    "  // @@protoc_insertion_point(field_set:$full_name$)\n"
-    "}\n"
-    "inline void $classname$::add_$name$($type$ value) {\n"
-    "  $name$_.Add(value);\n"
-    "  // @@protoc_insertion_point(field_add:$full_name$)\n"
-    "}\n");
+	"inline $type$ $classname$::$name$(int index) const {\n"
+	"  // @@protoc_insertion_point(field_get:$full_name$)\n"
+	"  return $name$_[index];\n"
+	"}\n\n");
   printer->Print(variables_,
-    "inline const ::google::protobuf::RepeatedField< $type$ >&\n"
-    "$classname$::$name$() const {\n"
+	"inline const std::vector< $type$ >& $classname$::$name$() const {\n"
     "  // @@protoc_insertion_point(field_list:$full_name$)\n"
     "  return $name$_;\n"
-    "}\n"
-    "inline ::google::protobuf::RepeatedField< $type$ >*\n"
-    "$classname$::mutable_$name$() {\n"
-    "  // @@protoc_insertion_point(field_mutable_list:$full_name$)\n"
-    "  return &$name$_;\n"
     "}\n");
 }
 

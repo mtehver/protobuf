@@ -76,55 +76,22 @@ MessageFieldGenerator::~MessageFieldGenerator() {}
 
 void MessageFieldGenerator::
 GeneratePrivateMembers(io::Printer* printer) const {
-  printer->Print(variables_, "$type$* $name$_;\n");
+  printer->Print(variables_, "$type$ $name$_ = $type$();\n");
 }
 
 void MessageFieldGenerator::
 GenerateAccessorDeclarations(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline const $type$& $name$() const$deprecation$;\n"
-    "inline $type$* mutable_$name$()$deprecation$;\n"
-    "inline $type$* $release_name$()$deprecation$;\n"
-    "inline void set_allocated_$name$($type$* $name$)$deprecation$;\n");
+    "inline const $type$& $name$() const$deprecation$;\n");
 }
 
 void MessageFieldGenerator::
 GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline const $type$& $classname$::$name$() const {\n"
-    "  // @@protoc_insertion_point(field_get:$full_name$)\n");
-
-  PrintHandlingOptionalStaticInitializers(
-    variables_, descriptor_->file(), printer,
-    // With static initializers.
-    "  return $name$_ != NULL ? *$name$_ : *default_instance_->$name$_;\n",
-    // Without.
-    "  return $name$_ != NULL ? *$name$_ : *default_instance().$name$_;\n");
-
-  printer->Print(variables_,
-    "}\n"
-    "inline $type$* $classname$::mutable_$name$() {\n"
-    "  set_has_$name$();\n"
-    "  if ($name$_ == NULL) $name$_ = new $type$;\n"
-    "  // @@protoc_insertion_point(field_mutable:$full_name$)\n"
-    "  return $name$_;\n"
-    "}\n"
-    "inline $type$* $classname$::$release_name$() {\n"
-    "  clear_has_$name$();\n"
-    "  $type$* temp = $name$_;\n"
-    "  $name$_ = NULL;\n"
-    "  return temp;\n"
-    "}\n"
-    "inline void $classname$::set_allocated_$name$($type$* $name$) {\n"
-    "  delete $name$_;\n"
-    "  $name$_ = $name$;\n"
-    "  if ($name$) {\n"
-    "    set_has_$name$();\n"
-    "  } else {\n"
-    "    clear_has_$name$();\n"
-    "  }\n"
-    "  // @@protoc_insertion_point(field_set_allocated:$full_name$)\n"
-    "}\n");
+	"inline const $type$& $classname$::$name$() const {\n"
+	"  // @@protoc_insertion_point(field_get:$full_name$)\n"
+	"  return $name$_;\n"
+	"}\n");
 }
 
 void MessageFieldGenerator::
@@ -202,31 +169,6 @@ GenerateInlineAccessorDefinitions(io::Printer* printer) const {
     "inline const $type$& $classname$::$name$() const {\n"
     "  return has_$name$() ? *$oneof_prefix$$name$_\n"
     "                      : $type$::default_instance();\n"
-    "}\n"
-    "inline $type$* $classname$::mutable_$name$() {\n"
-    "  if (!has_$name$()) {\n"
-    "    clear_$oneof_name$();\n"
-    "    set_has_$name$();\n"
-    "    $oneof_prefix$$name$_ = new $type$;\n"
-    "  }\n"
-    "  return $oneof_prefix$$name$_;\n"
-    "}\n"
-    "inline $type$* $classname$::$release_name$() {\n"
-    "  if (has_$name$()) {\n"
-    "    clear_has_$oneof_name$();\n"
-    "    $type$* temp = $oneof_prefix$$name$_;\n"
-    "    $oneof_prefix$$name$_ = NULL;\n"
-    "    return temp;\n"
-    "  } else {\n"
-    "    return NULL;\n"
-    "  }\n"
-    "}\n"
-    "inline void $classname$::set_allocated_$name$($type$* $name$) {\n"
-    "  clear_$oneof_name$();\n"
-    "  if ($name$) {\n"
-    "    set_has_$name$();\n"
-    "    $oneof_prefix$$name$_ = $name$;\n"
-    "  }\n"
     "}\n");
 }
 
@@ -262,48 +204,30 @@ RepeatedMessageFieldGenerator::~RepeatedMessageFieldGenerator() {}
 void RepeatedMessageFieldGenerator::
 GeneratePrivateMembers(io::Printer* printer) const {
   printer->Print(variables_,
-    "::google::protobuf::RepeatedPtrField< $type$ > $name$_;\n");
+    "std::vector< $type$ > $name$_;\n");
 }
 
 void RepeatedMessageFieldGenerator::
 GenerateAccessorDeclarations(io::Printer* printer) const {
   printer->Print(variables_,
     "inline const $type$& $name$(int index) const$deprecation$;\n"
-    "inline $type$* mutable_$name$(int index)$deprecation$;\n"
-    "inline $type$* add_$name$()$deprecation$;\n");
+);
   printer->Print(variables_,
-    "inline const ::google::protobuf::RepeatedPtrField< $type$ >&\n"
-    "    $name$() const$deprecation$;\n"
-    "inline ::google::protobuf::RepeatedPtrField< $type$ >*\n"
-    "    mutable_$name$()$deprecation$;\n");
+	"inline const std::vector< $type$ >& $name$() const$deprecation$;\n");
 }
 
 void RepeatedMessageFieldGenerator::
 GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
-    "inline const $type$& $classname$::$name$(int index) const {\n"
-    "  // @@protoc_insertion_point(field_get:$full_name$)\n"
-    "  return $name$_.$cppget$(index);\n"
-    "}\n"
-    "inline $type$* $classname$::mutable_$name$(int index) {\n"
-    "  // @@protoc_insertion_point(field_mutable:$full_name$)\n"
-    "  return $name$_.Mutable(index);\n"
-    "}\n"
-    "inline $type$* $classname$::add_$name$() {\n"
-    "  // @@protoc_insertion_point(field_add:$full_name$)\n"
-    "  return $name$_.Add();\n"
-    "}\n");
+	"inline const $type$& $classname$::$name$(int index) const {\n"
+	"  // @@protoc_insertion_point(field_get:$full_name$)\n"
+	"  return $name$_[index];\n"
+	"}\n");
   printer->Print(variables_,
-    "inline const ::google::protobuf::RepeatedPtrField< $type$ >&\n"
-    "$classname$::$name$() const {\n"
-    "  // @@protoc_insertion_point(field_list:$full_name$)\n"
-    "  return $name$_;\n"
-    "}\n"
-    "inline ::google::protobuf::RepeatedPtrField< $type$ >*\n"
-    "$classname$::mutable_$name$() {\n"
-    "  // @@protoc_insertion_point(field_mutable_list:$full_name$)\n"
-    "  return &$name$_;\n"
-    "}\n");
+	"inline const std::vector< $type$ >& $classname$::$name$() const {\n"
+	"  // @@protoc_insertion_point(field_list:$full_name$)\n"
+	"  return $name$_;\n"
+	"}\n");
 }
 
 void RepeatedMessageFieldGenerator::

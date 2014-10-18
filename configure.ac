@@ -147,13 +147,3 @@ case "$target_os" in
     AC_SEARCH_LIBS([sched_yield], [rt], [], [AC_MSG_FAILURE([sched_yield was not found on your system])])
     ;;
 esac
-
-# HACK:  Make gtest's configure script pick up our copy of CFLAGS and CXXFLAGS,
-#   since the flags added by ACX_CHECK_SUNCC must be used when compiling gtest
-#   too.
-export CFLAGS
-export CXXFLAGS
-AC_CONFIG_SUBDIRS([gtest])
-
-AC_CONFIG_FILES([Makefile src/Makefile protobuf.pc protobuf-lite.pc])
-AC_OUTPUT

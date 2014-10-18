@@ -113,17 +113,6 @@ void EnumGenerator::GenerateDefinition(io::Printer* printer) {
     vars["dllexport"] = options_.dllexport_decl + " ";
   }
 
-  printer->Print(vars,
-    "$dllexport$bool $classname$_IsValid(int value);\n"
-    "const $classname$ $prefix$$short_name$_MIN = $prefix$$min_name$;\n"
-    "const $classname$ $prefix$$short_name$_MAX = $prefix$$max_name$;\n");
-
-  if (generate_array_size_) {
-    printer->Print(vars,
-      "const int $prefix$$short_name$_ARRAYSIZE = "
-      "$prefix$$short_name$_MAX + 1;\n\n");
-  }
-
   if (HasDescriptorMethods(descriptor_->file())) {
     printer->Print(vars,
       "$dllexport$const ::google::protobuf::EnumDescriptor* $classname$_descriptor();\n");
@@ -165,20 +154,6 @@ void EnumGenerator::GenerateSymbolImports(io::Printer* printer) {
     vars["tag"] = descriptor_->value(j)->name();
     printer->Print(vars,
       "static const $nested_name$ $tag$ = $classname$_$tag$;\n");
-  }
-
-  printer->Print(vars,
-    "static inline bool $nested_name$_IsValid(int value) {\n"
-    "  return $classname$_IsValid(value);\n"
-    "}\n"
-    "static const $nested_name$ $nested_name$_MIN =\n"
-    "  $classname$_$nested_name$_MIN;\n"
-    "static const $nested_name$ $nested_name$_MAX =\n"
-    "  $classname$_$nested_name$_MAX;\n");
-  if (generate_array_size_) {
-    printer->Print(vars,
-      "static const int $nested_name$_ARRAYSIZE =\n"
-      "  $classname$_$nested_name$_ARRAYSIZE;\n");
   }
 
   if (HasDescriptorMethods(descriptor_->file())) {

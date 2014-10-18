@@ -80,14 +80,11 @@ StringFieldGenerator::~StringFieldGenerator() {}
 
 void StringFieldGenerator::
 GeneratePrivateMembers(io::Printer* printer) const {
-  printer->Print(variables_, "::std::string* $name$_;\n");
+  printer->Print(variables_, "::std::string $name$_ = $default$;\n");
 }
 
 void StringFieldGenerator::
 GenerateStaticMembers(io::Printer* printer) const {
-  if (!descriptor_->default_value_string().empty()) {
-    printer->Print(variables_, "static ::std::string* $default_variable$;\n");
-  }
 }
 
 void StringFieldGenerator::
@@ -117,14 +114,7 @@ GenerateAccessorDeclarations(io::Printer* printer) const {
   }
 
   printer->Print(variables_,
-    "inline const ::std::string& $name$() const$deprecation$;\n"
-    "inline void set_$name$(const ::std::string& value)$deprecation$;\n"
-    "inline void set_$name$(const char* value)$deprecation$;\n"
-    "inline void set_$name$(const $pointer_type$* value, size_t size)"
-                 "$deprecation$;\n"
-    "inline ::std::string* mutable_$name$()$deprecation$;\n"
-    "inline ::std::string* $release_name$()$deprecation$;\n"
-    "inline void set_allocated_$name$(::std::string* $name$)$deprecation$;\n");
+    "inline const ::std::string& $name$() const$deprecation$;\n");
 
 
   if (descriptor_->options().ctype() != FieldOptions::STRING) {
@@ -139,70 +129,7 @@ GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
     "inline const ::std::string& $classname$::$name$() const {\n"
     "  // @@protoc_insertion_point(field_get:$full_name$)\n"
-    "  return *$name$_;\n"
-    "}\n"
-    "inline void $classname$::set_$name$(const ::std::string& value) {\n"
-    "  set_has_$name$();\n"
-    "  if ($name$_ == $default_variable$) {\n"
-    "    $name$_ = new ::std::string;\n"
-    "  }\n"
-    "  $name$_->assign(value);\n"
-    "  // @@protoc_insertion_point(field_set:$full_name$)\n"
-    "}\n"
-    "inline void $classname$::set_$name$(const char* value) {\n"
-    "  set_has_$name$();\n"
-    "  if ($name$_ == $default_variable$) {\n"
-    "    $name$_ = new ::std::string;\n"
-    "  }\n"
-    "  $name$_->assign(value);\n"
-    "  // @@protoc_insertion_point(field_set_char:$full_name$)\n"
-    "}\n"
-    "inline "
-    "void $classname$::set_$name$(const $pointer_type$* value, size_t size) {\n"
-    "  set_has_$name$();\n"
-    "  if ($name$_ == $default_variable$) {\n"
-    "    $name$_ = new ::std::string;\n"
-    "  }\n"
-    "  $name$_->assign(reinterpret_cast<const char*>(value), size);\n"
-    "  // @@protoc_insertion_point(field_set_pointer:$full_name$)\n"
-    "}\n"
-    "inline ::std::string* $classname$::mutable_$name$() {\n"
-    "  set_has_$name$();\n"
-    "  if ($name$_ == $default_variable$) {\n");
-  if (descriptor_->default_value_string().empty()) {
-    printer->Print(variables_,
-      "    $name$_ = new ::std::string;\n");
-  } else {
-    printer->Print(variables_,
-      "    $name$_ = new ::std::string(*$default_variable$);\n");
-  }
-  printer->Print(variables_,
-    "  }\n"
-    "  // @@protoc_insertion_point(field_mutable:$full_name$)\n"
     "  return $name$_;\n"
-    "}\n"
-    "inline ::std::string* $classname$::$release_name$() {\n"
-    "  clear_has_$name$();\n"
-    "  if ($name$_ == $default_variable$) {\n"
-    "    return NULL;\n"
-    "  } else {\n"
-    "    ::std::string* temp = $name$_;\n"
-    "    $name$_ = const_cast< ::std::string*>($default_variable$);\n"
-    "    return temp;\n"
-    "  }\n"
-    "}\n"
-    "inline void $classname$::set_allocated_$name$(::std::string* $name$) {\n"
-    "  if ($name$_ != $default_variable$) {\n"
-    "    delete $name$_;\n"
-    "  }\n"
-    "  if ($name$) {\n"
-    "    set_has_$name$();\n"
-    "    $name$_ = $name$;\n"
-    "  } else {\n"
-    "    clear_has_$name$();\n"
-    "    $name$_ = const_cast< ::std::string*>($default_variable$);\n"
-    "  }\n"
-    "  // @@protoc_insertion_point(field_set_allocated:$full_name$)\n"
     "}\n");
 }
 
@@ -458,7 +385,7 @@ RepeatedStringFieldGenerator::~RepeatedStringFieldGenerator() {}
 void RepeatedStringFieldGenerator::
 GeneratePrivateMembers(io::Printer* printer) const {
   printer->Print(variables_,
-    "::google::protobuf::RepeatedPtrField< ::std::string> $name$_;\n");
+    "std::vector< ::std::string > $name$_;\n");
 }
 
 void RepeatedStringFieldGenerator::
@@ -473,24 +400,9 @@ GenerateAccessorDeclarations(io::Printer* printer) const {
   }
 
   printer->Print(variables_,
-    "inline const ::std::string& $name$(int index) const$deprecation$;\n"
-    "inline ::std::string* mutable_$name$(int index)$deprecation$;\n"
-    "inline void set_$name$(int index, const ::std::string& value)$deprecation$;\n"
-    "inline void set_$name$(int index, const char* value)$deprecation$;\n"
-    "inline "
-    "void set_$name$(int index, const $pointer_type$* value, size_t size)"
-                 "$deprecation$;\n"
-    "inline ::std::string* add_$name$()$deprecation$;\n"
-    "inline void add_$name$(const ::std::string& value)$deprecation$;\n"
-    "inline void add_$name$(const char* value)$deprecation$;\n"
-    "inline void add_$name$(const $pointer_type$* value, size_t size)"
-                 "$deprecation$;\n");
-
+    "inline const ::std::string& $name$(int index) const$deprecation$;\n");
   printer->Print(variables_,
-    "inline const ::google::protobuf::RepeatedPtrField< ::std::string>& $name$() const"
-                 "$deprecation$;\n"
-    "inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_$name$()"
-                 "$deprecation$;\n");
+    "inline const std::vector< ::std::string >& $name$() const$deprecation$;\n");
 
   if (descriptor_->options().ctype() != FieldOptions::STRING) {
     printer->Outdent();
@@ -504,53 +416,12 @@ GenerateInlineAccessorDefinitions(io::Printer* printer) const {
   printer->Print(variables_,
     "inline const ::std::string& $classname$::$name$(int index) const {\n"
     "  // @@protoc_insertion_point(field_get:$full_name$)\n"
-    "  return $name$_.$cppget$(index);\n"
-    "}\n"
-    "inline ::std::string* $classname$::mutable_$name$(int index) {\n"
-    "  // @@protoc_insertion_point(field_mutable:$full_name$)\n"
-    "  return $name$_.Mutable(index);\n"
-    "}\n"
-    "inline void $classname$::set_$name$(int index, const ::std::string& value) {\n"
-    "  // @@protoc_insertion_point(field_set:$full_name$)\n"
-    "  $name$_.Mutable(index)->assign(value);\n"
-    "}\n"
-    "inline void $classname$::set_$name$(int index, const char* value) {\n"
-    "  $name$_.Mutable(index)->assign(value);\n"
-    "  // @@protoc_insertion_point(field_set_char:$full_name$)\n"
-    "}\n"
-    "inline void "
-    "$classname$::set_$name$"
-    "(int index, const $pointer_type$* value, size_t size) {\n"
-    "  $name$_.Mutable(index)->assign(\n"
-    "    reinterpret_cast<const char*>(value), size);\n"
-    "  // @@protoc_insertion_point(field_set_pointer:$full_name$)\n"
-    "}\n"
-    "inline ::std::string* $classname$::add_$name$() {\n"
-    "  return $name$_.Add();\n"
-    "}\n"
-    "inline void $classname$::add_$name$(const ::std::string& value) {\n"
-    "  $name$_.Add()->assign(value);\n"
-    "  // @@protoc_insertion_point(field_add:$full_name$)\n"
-    "}\n"
-    "inline void $classname$::add_$name$(const char* value) {\n"
-    "  $name$_.Add()->assign(value);\n"
-    "  // @@protoc_insertion_point(field_add_char:$full_name$)\n"
-    "}\n"
-    "inline void "
-    "$classname$::add_$name$(const $pointer_type$* value, size_t size) {\n"
-    "  $name$_.Add()->assign(reinterpret_cast<const char*>(value), size);\n"
-    "  // @@protoc_insertion_point(field_add_pointer:$full_name$)\n"
+	"  return $name$_[index];\n"
     "}\n");
   printer->Print(variables_,
-    "inline const ::google::protobuf::RepeatedPtrField< ::std::string>&\n"
-    "$classname$::$name$() const {\n"
+	"inline const std::vector< ::std::string>& $classname$::$name$() const {\n"
     "  // @@protoc_insertion_point(field_list:$full_name$)\n"
     "  return $name$_;\n"
-    "}\n"
-    "inline ::google::protobuf::RepeatedPtrField< ::std::string>*\n"
-    "$classname$::mutable_$name$() {\n"
-    "  // @@protoc_insertion_point(field_mutable_list:$full_name$)\n"
-    "  return &$name$_;\n"
     "}\n");
 }
 

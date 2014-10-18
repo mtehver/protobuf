@@ -108,14 +108,6 @@ bool CppGenerator::Generate(const FileDescriptor* file,
     file_generator.GenerateHeader(&printer);
   }
 
-  // Generate cc file.
-  {
-    scoped_ptr<io::ZeroCopyOutputStream> output(
-        generator_context->Open(basename + ".cc"));
-    io::Printer printer(output.get(), '$');
-    file_generator.GenerateSource(&printer);
-  }
-
   return true;
 }
 

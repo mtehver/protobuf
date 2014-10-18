@@ -207,15 +207,15 @@ string StripProto(const string& filename) {
 
 const char* PrimitiveTypeName(FieldDescriptor::CppType type) {
   switch (type) {
-    case FieldDescriptor::CPPTYPE_INT32  : return "::google::protobuf::int32";
-    case FieldDescriptor::CPPTYPE_INT64  : return "::google::protobuf::int64";
-    case FieldDescriptor::CPPTYPE_UINT32 : return "::google::protobuf::uint32";
-    case FieldDescriptor::CPPTYPE_UINT64 : return "::google::protobuf::uint64";
+    case FieldDescriptor::CPPTYPE_INT32  : return "std::int32_t";
+    case FieldDescriptor::CPPTYPE_INT64  : return "std::int64_t";
+    case FieldDescriptor::CPPTYPE_UINT32 : return "std::uint32_t";
+    case FieldDescriptor::CPPTYPE_UINT64 : return "std::uint64_t";
     case FieldDescriptor::CPPTYPE_DOUBLE : return "double";
     case FieldDescriptor::CPPTYPE_FLOAT  : return "float";
     case FieldDescriptor::CPPTYPE_BOOL   : return "bool";
     case FieldDescriptor::CPPTYPE_ENUM   : return "int";
-    case FieldDescriptor::CPPTYPE_STRING : return "::std::string";
+    case FieldDescriptor::CPPTYPE_STRING : return "std::string";
     case FieldDescriptor::CPPTYPE_MESSAGE: return NULL;
 
     // No default because we want the compiler to complain if any new
@@ -272,9 +272,9 @@ string Int64ToString(int64 number) {
     // Make sure we are in a 2's complement system.
     GOOGLE_COMPILE_ASSERT(kint64min == GOOGLE_LONGLONG(~0x7fffffffffffffff),
                    kint64min_value_error);
-    return "GOOGLE_LONGLONG(~0x7fffffffffffffff)";
+    return "~0x7fffffffffffffffll";
   }
-  return "GOOGLE_LONGLONG(" + SimpleItoa(number) + ")";
+  return SimpleItoa(number) + "ll";
 }
 
 string DefaultValue(const FieldDescriptor* field) {
@@ -286,7 +286,7 @@ string DefaultValue(const FieldDescriptor* field) {
     case FieldDescriptor::CPPTYPE_INT64:
       return Int64ToString(field->default_value_int64());
     case FieldDescriptor::CPPTYPE_UINT64:
-      return "GOOGLE_ULONGLONG(" + SimpleItoa(field->default_value_uint64())+ ")";
+      return SimpleItoa(field->default_value_uint64())+ "ull";
     case FieldDescriptor::CPPTYPE_DOUBLE: {
       double value = field->default_value_double();
       if (value == numeric_limits<double>::infinity()) {
